@@ -29,3 +29,7 @@ archive.zip
 
 # macOS
 .DS_Store
+
+test.py
+
+database.py
