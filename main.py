@@ -2,7 +2,7 @@ from fastapi import FastAPI
 
 from core.config import settings, initiate_database
 from api.v1.api import api_router
-from data_population.populate_from_the_web import populate_database
+from data_population.populate_from_the_web import populate_database, init_rounds
 from aiocron import crontab
 
 
@@ -12,6 +12,7 @@ app.include_router(api_router, prefix = settings.API_V1_STR)
 async def startup():
     print('init database')
     await initiate_database()
+    await init_rounds()
 
 @crontab("* * * * * */30", start=True)
 async def scheduler_task():
