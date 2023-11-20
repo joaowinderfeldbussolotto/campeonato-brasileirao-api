@@ -1,12 +1,13 @@
 import requests
 from bs4 import BeautifulSoup
 import re
-
+from models.game import Game
+from models.round import Round
 
 
 def scrap_rounds(url = 'https://www.cbf.com.br/futebol-brasileiro'):
 
-    rounds = {}
+    rounds = []
     response = requests.get(url)
     html_content = response.text
 
@@ -21,15 +22,25 @@ def scrap_rounds(url = 'https://www.cbf.com.br/futebol-brasileiro'):
             else 'Ainda não aconteceu!'
             for element in results]
 
-    num_rounds = len(results)
+    num_rounds = len(home)
     rounds_per_dict = 10
-
     for i in range(0, num_rounds, rounds_per_dict):
         key = (i // rounds_per_dict) + 1
-        rounds[key] = {'home': home[i:i+rounds_per_dict],
-                        'away': away[i:i+rounds_per_dict],
-                        'score': score[i:i+rounds_per_dict]}
-        
+        games = []
+        for j in range(i, i+rounds_per_dict):
+            game = Game(home_team= home[j], away_team = away[j], score = score[j])
+            games.append(game)
+        round = Round(number = key, games = games)
+        rounds.append(round)
     return rounds
 
 
+def format_round(rounds, number):
+    games = []
+    for i in range(10):
+        print(rounds['home'][i], rounds['away'][i], rounds['score'][i])
+        home_team, away_team, score = rounds['home'][i], rounds['away'][i], rounds['score'][i]
+        game = Game(home_team= home_team, away_team = away_team, score = score)
+        games.append(game)
+
+    return Round(number = number, games = games)

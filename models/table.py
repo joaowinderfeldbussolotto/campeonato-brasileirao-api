@@ -1,12 +1,15 @@
 from typing import Optional
-
+from beanie import Document
 from pydantic import BaseModel, Field
 
-class Table(BaseModel):
+class Table(Document):
     team: str = Field(...)
     position: int = Field(..., gt = 0, lt = 21)
     points: int = Field(..., gt = -1, lt = 115)
     games_played: int =  Field(..., gt = -1, lt = 39)
+
+    class Settings:
+        name = 'table'
 
 def ResponseModel(data, message):
     return {
