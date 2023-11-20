@@ -34,3 +34,11 @@ async def update_rounds(rounds):
     await delete_all_records(round_collection)
     await save_rounds(rounds)
     print('Updated rounds')
+
+async def update_round(round):
+    update_dict = {k: v for k, v in round.dict().items() if k not in ["id", "revision_id"]}
+    update_query = {"$set": {field: value for field, value in update_dict.items()}}
+    db_round = await get_round(update_dict['number'])
+    if db_round:
+        await db_round.update(update_query)
+        return db_round

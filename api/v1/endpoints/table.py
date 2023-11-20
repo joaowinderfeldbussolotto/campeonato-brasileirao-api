@@ -7,4 +7,6 @@ router = APIRouter()
 
 @router.get('/', response_model = List[Table])
 async def get_table():
-    return get_table_db()
+    table = get_table_db()
+    table = await table.to_list()
+    return table
