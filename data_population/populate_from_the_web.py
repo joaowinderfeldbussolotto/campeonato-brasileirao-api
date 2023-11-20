@@ -1,9 +1,15 @@
-from database.database import update_table, update_round, get_rounds
+from database.database import update_table, update_round, get_rounds, update_rounds
 from services.scraping.table_scraping import scrap_table
 from services.scraping.rounds_scraping import scrap_rounds
 from core.config import initiate_database
 from datetime import datetime
 from utils import helper
+
+async def init_rounds():
+    rounds = scrap_rounds()
+    await update_rounds(rounds)
+
+
 async def populate_table():
     tournamente_table = scrap_table()
     await update_table(tournamente_table)
