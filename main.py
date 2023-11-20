@@ -3,15 +3,22 @@ from fastapi import FastAPI
 from core.config import settings, initiate_database
 from api.v1.api import api_router
 from data_population.populate_from_the_web import populate_database
+from aiocron import crontab
+
+
 app = FastAPI(title = 'API para jogos do Campeonato Brasileiro - Série A')
 app.include_router(api_router, prefix = settings.API_V1_STR)
 
-async def start_database():
+async def startup():
     print('init database')
     await initiate_database()
 
+@crontab("* * * * * */30", start=True)
+async def scheduler_task():
+    await populate_database()
 
-app.add_event_handler('startup', start_database)
+
+app.add_event_handler('startup', startup)
 
 if __name__ == '__main__':
     import uvicorn

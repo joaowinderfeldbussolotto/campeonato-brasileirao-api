@@ -32,6 +32,5 @@ archive.zip
 
 test.py
 
-database.py
 deploy.sh
 .env
