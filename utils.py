@@ -1,24 +1,33 @@
 class Helper:
     def __init__(self):
-        self.rounds_to_update = []
+        self.games_to_update = []
 
-    def compare_rounds(self, round1, round2):
-        return round1.number == round2.number and self.compare_games(round1.games, round2.games)
+    def compare_rounds(self, db_round, scraped_round):
+        return db_round.number == scraped_round.number and self.compare_games(db_round.games, scraped_round.games)
 
-    def compare_games(self, games1, games2):
-        return all(
-            game1.home_team == game2.home_team and
-            game1.away_team == game2.away_team and
-            game1.score == game2.score
-            for game1, game2 in zip(games1, games2)
-        )
-
+    def compare_games(self, db_games, scraped_games):
+        are_equal = True
+        for db_game, scraped_game in zip(db_games, scraped_games):
+            if (
+                db_game.home_team == scraped_game.home_team and
+                db_game.away_team == scraped_game.away_team and
+                db_game.score != scraped_game.score
+            ):
+                self.games_to_update.append(scraped_game)
+                are_equal = False
+        
+        return are_equal
+        
+        
     def find_different_rounds(self, old_rounds, new_rounds):
         different_rounds = []
         for old_round, new_round in zip(old_rounds, new_rounds):
             if not self.compare_rounds(old_round, new_round):
                 different_rounds.append(new_round)
-        return different_rounds
+                
+        games_to_update = self.games_to_update
+        self.games_to_update = []
+        return different_rounds, games_to_update
 
     
 helper = Helper()

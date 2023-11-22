@@ -2,7 +2,6 @@ from typing import Optional
 
 from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
-# from pydantic_settings import BaseSettings
 import models as models
 from dotenv import load_dotenv
 import os
@@ -12,6 +11,8 @@ load_dotenv()
 class Settings():
     DATABASE_URL: Optional[str] = os.getenv('DATABASE_URL')
     API_V1_STR: str = '/api/v1'
+    EMAIL_SENDER: str = os.getenv('EMAIL_SENDER')
+    EMAIL_APP_PASSWORD: str = os.getenv('EMAIL_APP_PASSWORD')
 
     class Config:
         orm_mode = True
