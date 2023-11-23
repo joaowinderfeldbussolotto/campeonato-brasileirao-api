@@ -1,3 +1,6 @@
+from datetime import datetime
+import pytz
+
 class Helper:
     def __init__(self):
         self.games_to_update = []
@@ -28,6 +31,14 @@ class Helper:
         games_to_update = self.games_to_update
         self.games_to_update = []
         return different_rounds, games_to_update
+
+    def get_formatted_date(self):
+
+
+        saopaulo_tz = pytz.timezone('America/Sao_Paulo')
+        current_datetime = datetime.now(saopaulo_tz)
+        return current_datetime.strftime('%Y-%m-%d')
+
 
     
 helper = Helper()

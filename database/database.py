@@ -42,3 +42,36 @@ async def update_round(round):
     if db_round:
         await db_round.update(update_query)
         return db_round
+    
+
+async def update_scores(home_team_query: str, away_team_query: str, new_score: str):
+    game_updated = False
+
+    round_document = await round_collection.find_one(
+        {
+            'games': {
+                '$elemMatch': {
+                    'home_team': home_team_query,
+                    'away_team': away_team_query,
+                    'score': {'$ne': new_score}
+                }
+            }
+        }
+    )
+    
+    if round_document:
+        round_dict = dict(round_document)
+        games = round_dict['games']
+        for i, game_item in enumerate(games):
+            game = dict(game_item)
+            if game['home_team'] == home_team_query and game['away_team'] == away_team_query:
+                game_updated = game
+                break
+        
+        update_query = {"$set": {f"games.{i}.score": new_score}}
+        
+        result = await round_document.update(
+            update_query
+        )
+        return True
+    return False
