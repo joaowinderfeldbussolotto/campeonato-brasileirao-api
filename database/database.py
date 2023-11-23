@@ -45,7 +45,6 @@ async def update_round(round):
     
 
 async def update_scores(home_team_query: str, away_team_query: str, new_score: str):
-    game_updated = False
 
     round_document = await round_collection.find_one(
         {
@@ -65,13 +64,10 @@ async def update_scores(home_team_query: str, away_team_query: str, new_score: s
         for i, game_item in enumerate(games):
             game = dict(game_item)
             if game['home_team'] == home_team_query and game['away_team'] == away_team_query:
-                game_updated = game
                 break
         
         update_query = {"$set": {f"games.{i}.score": new_score}}
         
-        result = await round_document.update(
-            update_query
-        )
+        await round_document.update(update_query)
         return True
     return False

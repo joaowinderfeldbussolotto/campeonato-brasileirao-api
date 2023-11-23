@@ -1,9 +1,10 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import pytz
 
 class Helper:
     def __init__(self):
         self.games_to_update = []
+        self.saopaulo_tz = pytz.timezone('America/Sao_Paulo')
 
     def compare_rounds(self, db_round, scraped_round):
         return db_round.number == scraped_round.number and self.compare_games(db_round.games, scraped_round.games)
@@ -32,13 +33,15 @@ class Helper:
         self.games_to_update = []
         return different_rounds, games_to_update
 
-    def get_formatted_date(self):
+    def get_formatted_date(self, date):
+        return date.strftime('%Y-%m-%d')
 
-
-        saopaulo_tz = pytz.timezone('America/Sao_Paulo')
-        current_datetime = datetime.now(saopaulo_tz)
-        return current_datetime.strftime('%Y-%m-%d')
-
-
+    def get_near_days(self):
+        today_date = datetime.now(self.saopaulo_tz)
+        yesterday_date = today_date - timedelta(days=1)
+        tomorrow_date= today_date + timedelta(days=1)
+        return [self.get_formatted_date(yesterday_date),
+                 self.get_formatted_date(today_date),
+                 self.get_formatted_date(tomorrow_date)]
     
 helper = Helper()

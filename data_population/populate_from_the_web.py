@@ -37,6 +37,7 @@ async def populate_database():
 async def populate_games():
     games_changed = []
     live_games = scrap_live_games()
+    print(live_games)
     for live_game in live_games:
         live_game = live_game.__dict__
         game = await update_scores(live_game['home_team'], live_game['away_team'], live_game['score'])
