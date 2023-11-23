@@ -2,9 +2,11 @@
 
 from models.table import Table
 from models.round import Round
+from models.subscription import Subscription
 
 table_collection = Table
 round_collection = Round
+subscription_collection = Subscription
 
 async def delete_all_records(collection):
     await collection.all().delete()
@@ -71,3 +73,13 @@ async def update_scores(home_team_query: str, away_team_query: str, new_score: s
         await round_document.update(update_query)
         return True
     return False
+
+
+async def get_subscription_by_email(email):
+    return await subscription_collection.find_one({"email":email})
+
+def get_subscriptions():
+    return subscription_collection.all()
+
+async def save_subscription(subscription):
+    return await subscription.create()
