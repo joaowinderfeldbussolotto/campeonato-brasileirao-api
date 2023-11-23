@@ -78,8 +78,17 @@ async def update_scores(home_team_query: str, away_team_query: str, new_score: s
 async def get_subscription_by_email(email):
     return await subscription_collection.find_one({"email":email})
 
+async def get_subscription_by_id(id):
+    sub = await subscription_collection.get(id)
+    return sub
+
 def get_subscriptions():
     return subscription_collection.all()
 
 async def save_subscription(subscription):
     return await subscription.create()
+
+async def delete_subscription(id):
+    sub = await get_subscription_by_id(id)
+    if sub:
+        return await sub.delete()

@@ -1,6 +1,6 @@
 from beanie import Document
 
-from pydantic import EmailStr
+from pydantic import EmailStr, BaseModel
 
 
 class Subscription(Document):
@@ -9,3 +9,5 @@ class Subscription(Document):
     class Settings:
         name = 'subscriptions'
 
+class UnsubscribeRequest(BaseModel):
+    email: EmailStr

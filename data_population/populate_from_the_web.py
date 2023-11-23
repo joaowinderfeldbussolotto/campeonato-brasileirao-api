@@ -4,7 +4,7 @@ from services.scraping.rounds_scraping import scrap_rounds
 from core.config import initiate_database
 from datetime import datetime
 from utils import helper
-from services.email_service import send_email
+from services.email_service import send_email, send_score_update_email
 from services.scraping.live_games_scraping import scrap_live_games
 from database.database import get_subscriptions
 
@@ -45,7 +45,7 @@ async def populate_games():
             games_changed.append(live_game) 
     if len(games_changed) != 0:
         recipients =  await get_recipients()
-        send_email(games_changed, recipients)
+        send_score_update_email(games_changed, recipients)
 
 async def get_recipients():
     subs = await get_subscriptions().to_list()

@@ -15,11 +15,12 @@ def build_email_content(games):
 
     return 'Atualização de placar!!!', email_content
 
+def send_score_update_email(games, recipients):
+    subject, body = build_email_content(games)
+    send_email(subject, body, recipients)
 
-# TODO: make this a backgroud task
-def send_email(games, recipients):
+def send_email(subject, body, recipients):
     try:
-        subject, body = build_email_content(games)
         sender = settings.EMAIL_SENDER
         password = settings.EMAIL_APP_PASSWORD
         msg = MIMEText(body,'html')
@@ -34,3 +35,17 @@ def send_email(games, recipients):
         print(str(e))
         return False
     return True
+
+# TODO: get url dynamically
+def send_confirm_unsub_email(recipient, url):
+    recipient = dict(recipient)
+    id = recipient.get('id')
+    url = f'{url}{id}'
+    content =  f'<p>Olá,</p> \
+    <p>Agradecemos por sua participação até agora. Se deseja se desinscrever, clique no link abaixo:</p>\
+    <p><a href={url}>Clique aqui para se desinscrever</a></p>\
+    <p>Obrigado!</p>'
+    subject = 'Confirmação de desinscrição'
+    return send_email(subject, content, [recipient.get('email')])
+
+
