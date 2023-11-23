@@ -26,7 +26,7 @@ def format_live_games_scraping(scraped_data):
         
 def scrap_live_games():
     
-    url = "https://www.bbc.com/sport/football/scores-fixtures/2023-11-22"
+    url = "https://www.bbc.com/sport/football/scores-fixtures/" + str(helper.get_formatted_date())
     html_content = requests.get(url).text
 
     soup = BeautifulSoup(html_content, "html.parser")

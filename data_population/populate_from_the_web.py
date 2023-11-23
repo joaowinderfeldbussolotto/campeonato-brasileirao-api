@@ -9,6 +9,7 @@ from services.scraping.live_games_scraping import scrap_live_games
 
 async def init_rounds():
     rounds = scrap_rounds()
+    if len(rounds) == 0: return
     await update_rounds(rounds)
 
 
