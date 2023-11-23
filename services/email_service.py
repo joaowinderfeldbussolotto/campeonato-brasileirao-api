@@ -36,16 +36,23 @@ def send_email(subject, body, recipients):
         return False
     return True
 
-# TODO: get url dynamically
-def send_confirm_unsub_email(recipient, url):
+def send_confirm_email(recipient, url, op='Sub'):
     recipient = dict(recipient)
     id = recipient.get('id')
-    url = f'{url}{id}'
-    content =  f'<p>Olá,</p> \
-    <p>Agradecemos por sua participação até agora. Se deseja se desinscrever, clique no link abaixo:</p>\
-    <p><a href={url}>Clique aqui para se desinscrever</a></p>\
-    <p>Obrigado!</p>'
-    subject = 'Confirmação de desinscrição'
+    url = f'{url}confirmacao/{id}'
+    if op == 'Sub':
+        content =  f'<p>Olá {recipient.get("name")},</p> \
+        <p>Obrigado por se inscrever! Estamos felizes em tê-lo(a) a bordo.</p>\
+        <p>Para confirmar sua inscrição, clique no link abaixo:</p>\
+        <p><a href="{url}">Clique aqui para confirmar a inscrição</a></p>\
+        <p>Obrigado!</p>'
+        subject = 'Clique aqui para confirmar a inscrição'
+    else:
+        content =  f'<p>Olá {recipient.get("name")},</p> \
+        <p>Agradecemos por sua participação até agora. Se deseja se desinscrever, clique no link abaixo:</p>\
+        <p><a href={url}>Clique aqui para se desinscrever</a></p>\
+        <p>Obrigado!</p>'
+        subject = 'Confirmação de desinscrição'
     return send_email(subject, content, [recipient.get('email')])
 
 

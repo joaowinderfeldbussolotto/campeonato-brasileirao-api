@@ -92,3 +92,8 @@ async def delete_subscription(id):
     sub = await get_subscription_by_id(id)
     if sub:
         return await sub.delete()
+
+async def update_subscription(sub):
+    update_query = {"$set": {field: value for field, value in dict(sub).items()}}
+
+    return await sub.update(update_query)
