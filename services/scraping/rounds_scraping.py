@@ -4,6 +4,10 @@ import re
 from models.game import Game
 from models.round import Round
 
+def teams_abbreviation_workaround(team_abbreviation, image_title):
+    if team_abbreviation == 'COR' and image_title.startswith('Coritiba'):
+        return 'CFC'
+    return team_abbreviation
 
 def scrap_rounds(url = 'https://www.cbf.com.br/futebol-brasileiro'):
 
@@ -24,13 +28,11 @@ def scrap_rounds(url = 'https://www.cbf.com.br/futebol-brasileiro'):
         away_abbr = element.select_one('.pull-right .time-sigla').get_text()
 
         # Check if the team abbreviation is 'COR' and the title starts with 'Coritiba'
-        if home_abbr == 'COR' and element.select_one('img[title^="Coritiba"]'):
-            home_team = 'CFC'
-        else:
-            home_team = home_abbr
-
+        home_team = teams_abbreviation_workaround(home_abbr, element.select_one('.pull-left img')['title'])
+        away_team = teams_abbreviation_workaround(away_abbr, element.select_one('.pull-right img')['title'])
+        
         home.append(home_team)
-        away.append(away_abbr)
+        away.append(away_team)
 
         score_text = element.select_one('.partida-horario').get_text()
         score_value = re.search(r'\d{1} x \d{1}', score_text)
