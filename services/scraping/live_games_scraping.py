@@ -61,5 +61,7 @@ def scrap_live_games():
 
 
 def process_team_name(team_name):
+    if team_name == 'Coritiba':
+        return 'CFC'
     processed_name = unidecode(team_name).upper()
     return processed_name[:3]

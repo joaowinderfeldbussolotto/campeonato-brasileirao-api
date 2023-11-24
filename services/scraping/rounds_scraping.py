@@ -15,12 +15,27 @@ def scrap_rounds(url = 'https://www.cbf.com.br/futebol-brasileiro'):
 
     results = soup.select('.aside-content .clearfix')
 
-    home = [element.select_one('.pull-left .time-sigla').get_text() for element in results]
-    away = [element.select_one('.pull-right .time-sigla').get_text() for element in results]
-    score = [re.search(r'\d{1} x \d{1}', element.select_one('.partida-horario').get_text()).group()
-            if element.select_one('.partida-horario') is not None and re.search(r'\d{1} x \d{1}', element.select_one('.partida-horario').get_text()) is not None
-            else 'Ainda não aconteceu!'
-            for element in results]
+    home = []
+    away = []
+    score = []
+
+    for element in results:
+        home_abbr = element.select_one('.pull-left .time-sigla').get_text()
+        away_abbr = element.select_one('.pull-right .time-sigla').get_text()
+
+        # Check if the team abbreviation is 'COR' and the title starts with 'Coritiba'
+        if home_abbr == 'COR' and element.select_one('img[title^="Coritiba"]'):
+            home_team = 'CFC'
+        else:
+            home_team = home_abbr
+
+        home.append(home_team)
+        away.append(away_abbr)
+
+        score_text = element.select_one('.partida-horario').get_text()
+        score_value = re.search(r'\d{1} x \d{1}', score_text)
+        score.append(score_value.group() if score_value else 'Ainda não aconteceu!')
+
 
     num_rounds = len(home)
     rounds_per_dict = 10
