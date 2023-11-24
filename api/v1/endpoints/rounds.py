@@ -13,8 +13,3 @@ async def get_round(num: int):
     round = await get_round_db(num)
     return round
 
-# def round_helper(round_document):
-#     round_dict = round_document.__dict__
-#     round_dict['id'] = round_dict[]
-#     round_dict.pop('id', None)
-#     return Round(**round_dict)

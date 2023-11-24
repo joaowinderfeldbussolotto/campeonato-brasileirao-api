@@ -39,8 +39,7 @@ async def populate_games():
     games_changed = []
     live_games = scrap_live_games()
     for live_game in live_games:
-        live_game = live_game.__dict__
-        game = await update_scores(live_game['home_team'], live_game['away_team'], live_game['score'])
+        game = await update_scores(live_game.home_team, live_game.away_team, live_game.score)
         if game: 
             games_changed.append(live_game) 
     if len(games_changed) != 0:
@@ -49,4 +48,4 @@ async def populate_games():
 
 async def get_recipients():
     subs = await get_subscriptions().to_list()
-    return [dict(sub)['email'] for sub in subs]
+    return [sub.email for sub in subs if sub.confirmed]

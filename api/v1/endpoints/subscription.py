@@ -1,7 +1,6 @@
 from fastapi import APIRouter, BackgroundTasks , HTTPException, Request
 from database.database import delete_subscription, get_subscription_by_email, get_subscription_by_id, save_subscription, update_subscription
 from models.subscription import Subscription, UnsubscribeRequest
-from fastapi.responses import JSONResponse
 
 from services.email_service import send_confirm_email
 
@@ -12,10 +11,8 @@ router = APIRouter()
 async def subscribe(id: str):
     existing_subscription = await get_subscription_by_id(id)
     if existing_subscription:
-        print(existing_subscription)
         existing_subscription.confirmed = True
         response = await update_subscription(existing_subscription)
-        print(response)
         return {'message': 'Inscrição confirmada'}
 
 
@@ -33,14 +30,13 @@ async def subscribe(subscription: Subscription, request: Request, background_tas
 
 @router.get('/desinscrever/confirmacao/{id}')
 async def unsubscribe(id: str):
-    print(id)
     response = await delete_subscription(id)
     return {'message': 'Inscrição cancelada!'}
 
 
 @router.post("/desinscrever/")
 async def unsubscribe(request_data: UnsubscribeRequest, request: Request, background_tasks: BackgroundTasks):
-    email = dict(request_data).get('email')
+    email = request_data.email
     existing_subscription = await get_subscription_by_email(email)
     if not existing_subscription:
         raise HTTPException(status_code=400, detail="Email não encontrado")

@@ -59,13 +59,10 @@ async def update_scores(home_team_query: str, away_team_query: str, new_score: s
             }
         }
     )
-    
     if round_document:
-        round_dict = dict(round_document)
-        games = round_dict['games']
-        for i, game_item in enumerate(games):
-            game = dict(game_item)
-            if game['home_team'] == home_team_query and game['away_team'] == away_team_query:
+        games = round_document.games
+        for i, game in enumerate(games):
+            if game.home_team == home_team_query and game.away_team == away_team_query:
                 break
         
         update_query = {"$set": {f"games.{i}.score": new_score}}
@@ -76,8 +73,7 @@ async def update_scores(home_team_query: str, away_team_query: str, new_score: s
 
 
 async def get_subscription_by_email(email):
-    return await subscription_collection.find_one({"email":email})
-
+    return await subscription_collection.find_one({"email": email})
 async def get_subscription_by_id(id):
     sub = await subscription_collection.get(id)
     return sub
