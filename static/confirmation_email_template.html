@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Confirmation Email{% endblock %}</title>
+</head>
+<body>
+    <p>Olá {{ name }},</p>
+    <p>Agradecemos por sua participação até agora. Se deseja se {{ operation }}, clique no link abaixo:</p>
+    <p><a href="{{ action_url }}">Clique aqui para {{ operation }}</a></p>
+    <p>Obrigado!</p>
+</body>
+</html>

@@ -36,22 +36,37 @@ def send_email(subject, body, recipients):
         return False
     return True
 
-def send_confirm_email(recipient, url, op='Sub'):
+
+def build_confirmation_email_content(recipient, url, operation='Sub'):
+    env = Environment(loader=FileSystemLoader('./static/'))
+    template_name = 'confirmation_email_template.html'
+    template = env.get_template(template_name)
+
     id = recipient.id
-    url = f'{url}confirmacao/{id}'
-    if op == 'Sub':
-        content =  f'<p>Olá {recipient.name},</p> \
-        <p>Obrigado por se inscrever! Estamos felizes em tê-lo(a) a bordo.</p>\
-        <p>Para confirmar sua inscrição, clique no link abaixo:</p>\
-        <p><a href="{url}">Clique aqui para confirmar a inscrição</a></p>\
-        <p>Obrigado!</p>'
+    confirmation_url = f'{url}confirmacao/{id}'
+    
+    if operation == 'Sub':
+        content = template.render(
+            name=recipient.name,
+            operation='inscrever',
+            action_url=confirmation_url
+        )
         subject = 'Clique aqui para confirmar a inscrição'
     else:
-        content =  f'<p>Olá {recipient.name},</p> \
-        <p>Agradecemos por sua participação até agora. Se deseja se desinscrever, clique no link abaixo:</p>\
-        <p><a href={url}>Clique aqui para se desinscrever</a></p>\
-        <p>Obrigado!</p>'
+        content = template.render(
+            name=recipient.name,
+            operation='desinscrever',
+            action_url=confirmation_url
+        )
         subject = 'Confirmação de desinscrição'
+
+    return subject, content
+
+
+
+def send_confirm_email(recipient, url, op='Sub'):
+    
+    subject, content = build_confirmation_email_content(recipient, url, op)
     return send_email(subject, content, [recipient.email])
 
 
