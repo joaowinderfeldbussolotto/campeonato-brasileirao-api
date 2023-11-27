@@ -19,7 +19,7 @@ ExceptionHandler(app)
 async def startup():
     print('init database')
     await initiate_database()
-    # await init_rounds()
+    await init_rounds()
 
 @crontab("* * * * * */30", start=True)
 async def scheduler_task():

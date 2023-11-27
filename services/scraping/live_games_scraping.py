@@ -29,7 +29,7 @@ def format_live_games_scraping(scraped_data):
         score  = 'Ainda não aconteceu!'
     else:
         score = f"{scraped_data[i+1]} x {scraped_data[i+3]}"
-    game = Game(home_team=home_team, away_team=away_team, score=score)
+    game = Game(home_team=home_team, away_team=away_team, score=score, time = scraped_data[i+4])
     games.append(game)
   return games
 

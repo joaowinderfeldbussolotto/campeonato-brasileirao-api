@@ -72,6 +72,34 @@ async def update_scores(home_team_query: str, away_team_query: str, new_score: s
     return False
 
 
+async def update_game_time(live_game):
+    home_team_query, away_team_query = live_game.home_team, live_game.away_team
+
+    round_document = await round_collection.find_one(
+        {
+            'games': {
+                '$elemMatch': {
+                    'home_team': home_team_query,
+                    'away_team': away_team_query,
+                    'time': {'$ne': 'FT'}
+                }
+            }
+        }
+    )
+    if round_document:
+        games = round_document.games
+        for i, game in enumerate(games):
+            if game.home_team == home_team_query and game.away_team == away_team_query:
+                break
+        
+        update_query = {"$set": {f"games.{i}.time": 'FT'}}
+        
+        await round_document.update(update_query)
+        return True
+    return False
+
+
+
 async def get_subscription_by_email(email):
     return await subscription_collection.find_one({"email": email})
 async def get_subscription_by_id(id):

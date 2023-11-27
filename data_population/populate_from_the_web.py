@@ -1,4 +1,4 @@
-from database.database import update_scores, update_table, update_round, get_rounds, update_rounds
+from database.database import update_scores, update_table, update_round, get_rounds, update_rounds, update_game_time
 from services.scraping.table_scraping import scrap_table
 from services.scraping.rounds_scraping import scrap_rounds
 from core.config import initiate_database
@@ -41,7 +41,9 @@ async def populate_games():
     for live_game in live_games:
         game = await update_scores(live_game.home_team, live_game.away_team, live_game.score)
         if game: 
-            games_changed.append(live_game) 
+            games_changed.append(live_game)
+        if live_game.time == 'FT':
+            result = await update_game_time(live_game)
     if len(games_changed) != 0:
         recipients =  await get_recipients()
         send_score_update_email(games_changed, recipients)

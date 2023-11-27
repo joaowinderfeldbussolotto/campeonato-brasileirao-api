@@ -16,9 +16,7 @@ def scrap_rounds(url = 'https://www.cbf.com.br/futebol-brasileiro'):
     html_content = response.text
 
     soup = BeautifulSoup(html_content, 'html.parser')
-
     results = soup.select('.aside-content .clearfix')
-
     home = []
     away = []
     score = []
@@ -34,6 +32,7 @@ def scrap_rounds(url = 'https://www.cbf.com.br/futebol-brasileiro'):
         home.append(home_team)
         away.append(away_team)
 
+
         score_text = element.select_one('.partida-horario').get_text()
         score_value = re.search(r'\d{1} x \d{1}', score_text)
         score.append(score_value.group() if score_value else 'Ainda não aconteceu!')
@@ -45,7 +44,9 @@ def scrap_rounds(url = 'https://www.cbf.com.br/futebol-brasileiro'):
         key = (i // rounds_per_dict) + 1
         games = []
         for j in range(i, i+rounds_per_dict):
-            game = Game(home_team= home[j], away_team = away[j], score = score[j])
+            time = ''
+            if score[j] != 'Ainda não aconteceu!': time = 'FT'
+            game = Game(home_team= home[j], away_team = away[j], score = score[j], time = time)
             games.append(game)
         round = Round(number = key, games = games)
         rounds.append(round)
