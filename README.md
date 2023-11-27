@@ -9,17 +9,18 @@ Este projeto consiste em uma API que fornece informações sobre o Campeonato Br
 - Cadastro para receber notificações por e-mail quando um gol acontecer.
 
 ## Uso
-1. Faça requisições à [API](#http://150.136.154.12) para obter dados sobre a classificação e os jogos.
+1. Faça requisições à [API](http://150.136.154.12) para obter dados sobre a classificação e os jogos.
 2. Utilize a rota de cadastro para receber notificações por e-mail.
 
 ## Documentação
-A documentação está disponível aqui: [Documentação](#http://150.136.154.12/redoc) 
+A documentação está disponível aqui: [Documentação](http://150.136.154.12/redoc) 
 
 
 ## Rotas
 - `/api/v1/tabela`: Retorna a tabela de classificação.
 - `/api/v1/rodada/:rodada`: Fornece informações sobre os jogos de uma rodada específica.
-- `/api/v1/inscrição`: Permite o cadastro para receber notificações de gol por e-mail.
+- `/api/v1/inscricao`: Permite o cadastro para receber notificações de gol por e-mail.
+- `/api/v1/ao-vivo`: Consultar os jogos acontecendo agora!
 
 ## Tecnologias Utilizadas
 - Python
