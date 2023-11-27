@@ -13,6 +13,7 @@ class Round(Document, RoundModel):
     class Settings:
         name = 'round'
 
-  
+class RoundRequest(BaseModel):
+    num: int = Field(..., gt = -1, lt = 39)
 
     

@@ -12,20 +12,23 @@ class ExceptionHandler:
     
     @staticmethod
     async def request_validation_exception_handler(request: Request, exc: RequestValidationError):
-        message = [ErrorTranslations.get_error_message(err) for err in exc.errors()]
+        message = [ErrorHelper.get_error_message(err) for err in exc.errors()]
         return JSONResponse(status_code=422,
-                            content={"message": message})
+                            content={"detail": message})
 
     @staticmethod
     async def validation_exception_handler(request: Request, exc: ValidationError):
-        return ExceptionHandler.request_validation_exception_handler(request, exc)
+        return await ExceptionHandler.request_validation_exception_handler(request, exc)
     
     
 
-class ErrorTranslations:
+class ErrorHelper:
 
     @staticmethod
     def get_error_message(error):
-        loc = error['loc']
-        return f'{error.get("msg")}: {loc[1]}'
+        loc = error.get('loc')
+        field = ''
+        if loc:
+            field = f': {loc[1]}'
+        return f'{error.get("msg")}{field}'
 
