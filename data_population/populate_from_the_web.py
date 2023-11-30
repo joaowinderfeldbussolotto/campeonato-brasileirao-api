@@ -39,8 +39,8 @@ async def populate_database():
 
 async def populate_games():
     games_changed = []
-    # live_games = scrap_live_games()
-    live_games = [Game(home_team = 'PAL', away_team = 'CUI', score = '3 x 0', time = '')]
+    live_games = scrap_live_games()
+    # live_games = [Game(home_team = 'PAL', away_team = 'CUI', score = '3 x 0', time = '')]
     for live_game in live_games:
         game = await update_scores(live_game.home_team, live_game.away_team, live_game.score)
         if game: 
