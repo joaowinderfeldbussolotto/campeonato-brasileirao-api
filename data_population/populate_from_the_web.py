@@ -44,8 +44,8 @@ async def populate_games():
     for live_game in live_games:
         game = await update_scores(live_game.home_team, live_game.away_team, live_game.score)
         if game:
-            if live_game.score != 'Ainda não aconteceu!'
-            games_changed.append(live_game)
+            if live_game.score != 'Ainda não aconteceu!':
+                games_changed.append(live_game)
         if live_game.time == 'FT':
             result = await update_game_time(live_game)
     if len(games_changed) != 0:
