@@ -13,7 +13,7 @@ class Settings():
     API_V1_STR: str = '/api/v1'
     EMAIL_SENDER: str = os.getenv('EMAIL_SENDER')
     EMAIL_APP_PASSWORD: str = os.getenv('EMAIL_APP_PASSWORD')
-
+    BOT_API_URL: str = os.getenv('BOT_API_URL')
     class Config:
         orm_mode = True
 

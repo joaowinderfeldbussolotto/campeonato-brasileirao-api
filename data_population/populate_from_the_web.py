@@ -1,4 +1,6 @@
 from database.database import update_scores, update_table, update_round, get_rounds, update_rounds, update_game_time
+from models.game import Game
+from services.notification import notify_goal_on_bot
 from services.scraping.table_scraping import scrap_table
 from services.scraping.rounds_scraping import scrap_rounds
 from core.config import initiate_database
@@ -37,7 +39,8 @@ async def populate_database():
 
 async def populate_games():
     games_changed = []
-    live_games = scrap_live_games()
+    # live_games = scrap_live_games()
+    live_games = [Game(home_team = 'PAL', away_team = 'CUI', score = '3 x 0', time = '')]
     for live_game in live_games:
         game = await update_scores(live_game.home_team, live_game.away_team, live_game.score)
         if game: 
@@ -45,9 +48,13 @@ async def populate_games():
         if live_game.time == 'FT':
             result = await update_game_time(live_game)
     if len(games_changed) != 0:
+        notify_goal_on_bot(games_changed)
         recipients =  await get_recipients()
         send_score_update_email(games_changed, recipients)
 
 async def get_recipients():
     subs = await get_subscriptions().to_list()
     return [sub.email for sub in subs if sub.confirmed]
+
+
+
