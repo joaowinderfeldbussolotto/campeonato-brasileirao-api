@@ -4,10 +4,8 @@ from core.config import settings
 def notify_goal_on_bot(games):
     try:
         url = settings.BOT_API_URL
-        message = ""
-        for game in games:
-            message += f'{game.home_team} {game.score} {game.away_team}\n'
-        data = {"message": message}
+        games = [dict(game) for game in games]
+        data = {"data": games}
 
         response = requests.post(url, json=data)
 
@@ -17,5 +15,6 @@ def notify_goal_on_bot(games):
         else:
             print(f"POST request failed with status code {response.status_code}")
             print("Response:", response.text)
-    except Exception:
+    except Exception as e:
+        print(str(e))
         return False
