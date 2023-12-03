@@ -14,6 +14,8 @@ class Settings():
     EMAIL_SENDER: str = os.getenv('EMAIL_SENDER')
     EMAIL_APP_PASSWORD: str = os.getenv('EMAIL_APP_PASSWORD')
     BOT_API_URL: str = os.getenv('BOT_API_URL')
+    SERVER: str = os.getenv('SERVER')
+    QUEUE: str = os.getenv('QUEUE')
     class Config:
         orm_mode = True
 

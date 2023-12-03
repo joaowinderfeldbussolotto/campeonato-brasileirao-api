@@ -64,7 +64,8 @@ async def update_scores(home_team_query: str, away_team_query: str, new_score: s
         for i, game in enumerate(games):
             if game.home_team == home_team_query and game.away_team == away_team_query:
                 bd_time = game.time or 0
-                print(bd_time, new_time)
+                new_time = new_time or 0
+                print(home_team_query, away_team_query, bd_time, new_time)
                 if new_time != 'FT' and (bd_time == 'FT' or int(new_time) < int(bd_time)):
                     return
                 break

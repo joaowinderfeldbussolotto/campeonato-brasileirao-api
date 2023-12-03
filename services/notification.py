@@ -1,3 +1,5 @@
+import pika
+import json
 import requests
 from core.config import settings
 
@@ -18,3 +20,16 @@ def notify_goal_on_bot(games):
     except Exception as e:
         print(str(e))
         return False
+    
+def notify_queue(games):
+
+    games = [dict(game) for game in games]
+    server, queue = settings.SERVER, settings.QUEUE
+    connection = pika.BlockingConnection(pika.ConnectionParameters(server))
+    channel = connection.channel()
+    channel.queue_declare(queue)
+
+    channel.basic_publish(exchange='', routing_key=queue, body=json.dumps({"data": games}))
+
+
+    connection.close()
